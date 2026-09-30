@@ -1,0 +1,39 @@
+[
+  {
+    "case": "home_units_january",
+    "question": "How many Home-category units were sold in completed orders in January 2026?",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "answer",
+    "status": "PASS",
+    "generated_sql": "SELECT SUM(oi.quantity) AS total_units_sold\nFROM order_items oi\nJOIN orders o ON o.order_id = oi.order_id\nJOIN products p ON p.product_id = oi.product_id\nWHERE p.category = 'Home'\n  AND o.status = 'completed'\n  AND o.order_date >= '2026-01-01'\n  AND o.order_date < '2026-02-01';",
+    "reference_sql": "\n        SELECT SUM(oi.quantity)\n        FROM orders o\n        JOIN order_items oi ON oi.order_id = o.order_id\n        JOIN products p ON p.product_id = oi.product_id\n        WHERE o.status = 'completed'\n          AND p.category = 'Home'\n          AND o.order_date >= '2026-01-01'\n          AND o.order_date < '2026-02-01'\n        ",
+    "retrieved_ids": [
+      "order_items",
+      "products",
+      "category_example",
+      "dates",
+      "orders"
+    ],
+    "actual": {
+      "columns": [
+        "total_units_sold"
+      ],
+      "data": [
+        [
+          81
+        ]
+      ]
+    },
+    "reference": {
+      "columns": [
+        "SUM(oi.quantity)"
+      ],
+      "data": [
+        [
+          81
+        ]
+      ]
+    },
+    "seconds": 4.4
+  }
+]

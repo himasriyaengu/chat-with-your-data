@@ -1,0 +1,8 @@
+case,expected,status,seconds,model
+category_last_quarter,answer,PASS,5.14,gemini-3.1-flash-lite
+regional_revenue,answer,PASS,2.96,gemini-3.1-flash-lite
+average_order_value,answer,PASS,6.38,gemini-3.1-flash-lite
+cancelled_orders,answer,PASS,3.44,gemini-3.1-flash-lite
+completed_orders_may,answer,PASS,3.78,gemini-3.1-flash-lite
+home_units_january,answer,API_ERROR_503,0.98,gemini-3.1-flash-lite
+unsupported_profit,refusal,PASS,4.66,gemini-3.1-flash-lite

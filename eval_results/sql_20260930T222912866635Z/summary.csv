@@ -1,0 +1,2 @@
+case,expected,status,seconds,model
+home_units_january,answer,PASS,4.4,gemini-3.1-flash-lite

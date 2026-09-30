@@ -1,0 +1,6 @@
+question,required_recall_at_6,all_required_found,missing_documents,retrieved_documents
+Which product category had the highest revenue last quarter?,0.8,False,orders,category_example; products; revenue; dates; order_items; average_order_value
+Show revenue by customer region in 2026.,0.75,False,orders,customers; category_example; revenue; dates; order_items; products
+What was the average order value in June 2026?,1.0,True,,average_order_value; dates; category_example; order_items; orders; revenue
+How many orders were cancelled in 2025?,1.0,True,,orders; dates; category_example; revenue; average_order_value; order_items
+Which products sold the most units in completed orders?,1.0,True,,order_items; category_example; products; orders; average_order_value; revenue

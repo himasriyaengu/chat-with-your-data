@@ -1,0 +1,246 @@
+[
+  {
+    "case": "category_last_quarter",
+    "question": "Which product category had the highest revenue last quarter?",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "answer",
+    "status": "PASS",
+    "generated_sql": "SELECT p.category, ROUND(SUM(oi.quantity * oi.unit_price_cents * (100 - oi.discount_percent) / 10000.0), 2) AS revenue_usd FROM order_items oi JOIN orders o ON o.order_id = oi.order_id JOIN products p ON p.product_id = oi.product_id WHERE o.status = 'completed' AND o.order_date >= '2026-04-01' AND o.order_date < '2026-07-01' GROUP BY p.category ORDER BY revenue_usd DESC LIMIT 1;",
+    "reference_sql": "\n        SELECT p.category, ROUND(\nSUM(oi.quantity * oi.unit_price_cents *\n    (100 - oi.discount_percent) / 10000.0)\n, 2)\n        FROM orders o\n        JOIN order_items oi ON oi.order_id = o.order_id\n        JOIN products p ON p.product_id = oi.product_id\n        WHERE o.status = 'completed'\n          AND o.order_date >= '2026-04-01'\n          AND o.order_date < '2026-07-01'\n        GROUP BY p.category\n        ORDER BY 2 DESC LIMIT 1\n        ",
+    "retrieved_ids": [
+      "category_example",
+      "products",
+      "revenue",
+      "dates",
+      "order_items"
+    ],
+    "actual": {
+      "columns": [
+        "category",
+        "revenue_usd"
+      ],
+      "data": [
+        [
+          "Electronics",
+          113486.7
+        ]
+      ]
+    },
+    "reference": {
+      "columns": [
+        "category",
+        "ROUND(\nSUM(oi.quantity * oi.unit_price_cents *\n    (100 - oi.discount_percent) / 10000.0)\n, 2)"
+      ],
+      "data": [
+        [
+          "Electronics",
+          113486.7
+        ]
+      ]
+    },
+    "seconds": 5.14
+  },
+  {
+    "case": "regional_revenue",
+    "question": "Show revenue by region in 2026.",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "answer",
+    "status": "PASS",
+    "generated_sql": "SELECT c.region, ROUND(SUM(oi.quantity * oi.unit_price_cents * (100 - oi.discount_percent) / 10000.0), 2) AS revenue_usd FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id WHERE o.status = 'completed' AND o.order_date >= '2026-01-01' AND o.order_date < '2027-01-01' GROUP BY c.region ORDER BY revenue_usd DESC;",
+    "reference_sql": "\n        SELECT c.region, ROUND(\nSUM(oi.quantity * oi.unit_price_cents *\n    (100 - oi.discount_percent) / 10000.0)\n, 2)\n        FROM orders o\n        JOIN customers c ON c.customer_id = o.customer_id\n        JOIN order_items oi ON oi.order_id = o.order_id\n        WHERE o.status = 'completed'\n          AND o.order_date >= '2026-01-01'\n          AND o.order_date < '2027-01-01'\n        GROUP BY c.region\n        ",
+    "retrieved_ids": [
+      "category_example",
+      "revenue",
+      "dates",
+      "customers",
+      "average_order_value"
+    ],
+    "actual": {
+      "columns": [
+        "region",
+        "revenue_usd"
+      ],
+      "data": [
+        [
+          "South",
+          135222.35
+        ],
+        [
+          "North",
+          116762.65
+        ],
+        [
+          "West",
+          101664.55
+        ],
+        [
+          "East",
+          78929.5
+        ]
+      ]
+    },
+    "reference": {
+      "columns": [
+        "region",
+        "ROUND(\nSUM(oi.quantity * oi.unit_price_cents *\n    (100 - oi.discount_percent) / 10000.0)\n, 2)"
+      ],
+      "data": [
+        [
+          "East",
+          78929.5
+        ],
+        [
+          "North",
+          116762.65
+        ],
+        [
+          "South",
+          135222.35
+        ],
+        [
+          "West",
+          101664.55
+        ]
+      ]
+    },
+    "seconds": 2.96
+  },
+  {
+    "case": "average_order_value",
+    "question": "What was the average order value in June 2026?",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "answer",
+    "status": "PASS",
+    "generated_sql": "SELECT ROUND(SUM(oi.quantity * oi.unit_price_cents * (100 - oi.discount_percent) / 10000.0) / COUNT(DISTINCT o.order_id), 2) AS average_order_value_usd FROM order_items oi JOIN orders o ON o.order_id = oi.order_id WHERE o.status = 'completed' AND o.order_date >= '2026-06-01' AND o.order_date < '2026-07-01'",
+    "reference_sql": "\n        SELECT ROUND(\n            \nSUM(oi.quantity * oi.unit_price_cents *\n    (100 - oi.discount_percent) / 10000.0)\n / NULLIF(COUNT(DISTINCT o.order_id), 0), 2\n        )\n        FROM orders o\n        JOIN order_items oi ON oi.order_id = o.order_id\n        WHERE o.status = 'completed'\n          AND o.order_date >= '2026-06-01'\n          AND o.order_date < '2026-07-01'\n        ",
+    "retrieved_ids": [
+      "average_order_value",
+      "dates",
+      "category_example",
+      "order_items",
+      "orders"
+    ],
+    "actual": {
+      "columns": [
+        "average_order_value_usd"
+      ],
+      "data": [
+        [
+          612.2
+        ]
+      ]
+    },
+    "reference": {
+      "columns": [
+        "ROUND(\n            \nSUM(oi.quantity * oi.unit_price_cents *\n    (100 - oi.discount_percent) / 10000.0)\n / NULLIF(COUNT(DISTINCT o.order_id), 0), 2\n        )"
+      ],
+      "data": [
+        [
+          612.2
+        ]
+      ]
+    },
+    "seconds": 6.38
+  },
+  {
+    "case": "cancelled_orders",
+    "question": "How many orders were cancelled in 2025?",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "answer",
+    "status": "PASS",
+    "generated_sql": "SELECT COUNT(o.order_id) AS cancelled_orders_count FROM orders o WHERE o.status = 'cancelled' AND o.order_date >= '2025-01-01' AND o.order_date <= '2025-12-31'",
+    "reference_sql": "\n        SELECT COUNT(*) FROM orders\n        WHERE status = 'cancelled'\n          AND order_date >= '2025-01-01'\n          AND order_date < '2026-01-01'\n        ",
+    "retrieved_ids": [
+      "orders",
+      "dates",
+      "category_example",
+      "revenue",
+      "average_order_value"
+    ],
+    "actual": {
+      "columns": [
+        "cancelled_orders_count"
+      ],
+      "data": [
+        [
+          102
+        ]
+      ]
+    },
+    "reference": {
+      "columns": [
+        "COUNT(*)"
+      ],
+      "data": [
+        [
+          102
+        ]
+      ]
+    },
+    "seconds": 3.44
+  },
+  {
+    "case": "completed_orders_may",
+    "question": "How many distinct completed orders were placed in May 2026?",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "answer",
+    "status": "PASS",
+    "generated_sql": "SELECT COUNT(DISTINCT o.order_id) FROM orders o WHERE o.status = 'completed' AND o.order_date >= '2026-05-01' AND o.order_date < '2026-06-01'",
+    "reference_sql": "\n        SELECT COUNT(DISTINCT order_id) FROM orders\n        WHERE status = 'completed'\n          AND order_date >= '2026-05-01'\n          AND order_date < '2026-06-01'\n        ",
+    "retrieved_ids": [
+      "orders",
+      "dates",
+      "average_order_value",
+      "category_example",
+      "revenue"
+    ],
+    "actual": {
+      "columns": [
+        "COUNT(DISTINCT o.order_id)"
+      ],
+      "data": [
+        [
+          81
+        ]
+      ]
+    },
+    "reference": {
+      "columns": [
+        "COUNT(DISTINCT order_id)"
+      ],
+      "data": [
+        [
+          81
+        ]
+      ]
+    },
+    "seconds": 3.78
+  },
+  {
+    "case": "home_units_january",
+    "question": "How many Home-category units were sold in completed orders in January 2026?",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "answer",
+    "status": "API_ERROR_503",
+    "generated_sql": "",
+    "reference_sql": "\n        SELECT SUM(oi.quantity)\n        FROM orders o\n        JOIN order_items oi ON oi.order_id = o.order_id\n        JOIN products p ON p.product_id = oi.product_id\n        WHERE o.status = 'completed'\n          AND p.category = 'Home'\n          AND o.order_date >= '2026-01-01'\n          AND o.order_date < '2026-02-01'\n        ",
+    "seconds": 0.98
+  },
+  {
+    "case": "unsupported_profit",
+    "question": "What was net profit after supplier costs in 2026?",
+    "model": "gemini-3.1-flash-lite",
+    "expected": "refusal",
+    "status": "PASS",
+    "generated_sql": "INSUFFICIENT_CONTEXT",
+    "reference_sql": "",
+    "retrieved_ids": [
+      "category_example",
+      "revenue",
+      "order_items",
+      "products",
+      "average_order_value"
+    ],
+    "seconds": 4.66
+  }
+]
